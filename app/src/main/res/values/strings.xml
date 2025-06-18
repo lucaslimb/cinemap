@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Cinemap</string>
+    <string name="ib_settings_button">Profile button</string>
+    <string name="year">1970</string>
+    <string name="marker_poster_image_cd">Poster image</string>
+    <string name="info_original_title">Original Title</string>
+    <string name="info_country">Genre</string>
+    <string name="info_duration">120 min</string>
+    <string name="info_director">Director</string>
+    <string name="na">N/A</string>
+    <string name="btn_clearmap">clear map</string>
+    <string name="btn_save">Save button</string>
+    <string name="ib_back">Back button</string>
+    <string name="tv_history_title">Your expedition history</string>
+    <string name="tv_history_profile_title">%s</string>
+    <string name="tv_history_films_count">"Films discovered: %d"</string>
+    <string name="tv_history_countries_count">"Countries explored: %d"</string>
+    <string name="tv_history_continents_count">"Continents explored: %d"</string>
+    <string name="tv_history_years_count">"Years of expedition: %d"</string>
+    <string name="et_search_countries">search countries...</string>
+    <string name="ib_search_button_ct">Search button</string>
+</resources>

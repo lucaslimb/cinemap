@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_movie_poster_frame"
+    android:layout_width="130dp"
+    android:layout_height="204dp"
+    android:foreground="@drawable/rounded_image_background_big"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/item_info_image"
+            android:layout_gravity="center"
+            android:layout_width="122dp"
+            android:layout_height="193dp"
+            android:layout_marginStart="3dp"
+            android:contentDescription="@string/marker_poster_image_cd"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_poster" />
+
+</LinearLayout>
