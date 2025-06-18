@@ -93,9 +93,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             startActivity(intent)
         }
 
-        val countrySearched = findViewById<EditText>(R.id.et_country_search).text.toString()
         val btnSearch: ImageButton = findViewById(R.id.btn_search)
         btnSearch.setOnClickListener {
+            val countrySearched = findViewById<EditText>(R.id.et_country_search).text.toString().trim()
+
             lifecycleScope.launch {
                 searchCountry(countrySearched)
             }

@@ -42,6 +42,7 @@
         android:textSize="16sp"
         android:hint="@string/et_search_countries"
         android:textColorHint="@color/slider_grey"
+        android:textColor="@color/slider_grey"
         android:paddingHorizontal="10dp"
         android:fontFamily="@font/courierprime_regular"
         android:inputType="text"
