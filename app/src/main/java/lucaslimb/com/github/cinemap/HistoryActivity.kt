@@ -100,13 +100,13 @@ class HistoryActivity : AppCompatActivity() {
                     title.text = getString(R.string.tv_history_profile_title, "Awaiting your next journey")
                 } else if (numberFilms <= 10) {
                     title.text = getString(R.string.tv_history_profile_title, dao.getTitle())
-                } else if (numberFilms <= 15){
+                } else if (numberFilms <= 20){
                     title.text = getString(R.string.tv_history_profile_title, "A dream traveler")
-                } else if (numberFilms <= 25){
+                } else if (numberFilms <= 40){
                     title.text = getString(R.string.tv_history_profile_title, "A professor of archaeology")
-                } else if (numberFilms <= 35){
+                } else if (numberFilms <= 70){
                     title.text = getString(R.string.tv_history_profile_title, "A knight of the round table")
-                } else if (numberFilms <= 49){
+                } else if (numberFilms <= 99){
                     title.text = getString(R.string.tv_history_profile_title, "A barefoot wanderer of Middle-Earth")
                 } else {
                     title.text = getString(R.string.tv_history_profile_title, "A space Odysseus")
