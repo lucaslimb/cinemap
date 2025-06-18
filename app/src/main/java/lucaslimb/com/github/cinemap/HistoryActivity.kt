@@ -9,8 +9,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import lucaslimb.com.github.cinemap.adapters.SavedMovieAdapter
 import lucaslimb.com.github.cinemap.data.db.AppDatabase
 
@@ -42,16 +44,54 @@ class HistoryActivity : AppCompatActivity() {
         title = findViewById(R.id.tv_history_profile_title)
         filmsCount = findViewById(R.id.tv_history_films_count)
         countriesCount = findViewById(R.id.tv_history_countries_count)
-        continentsCount = findViewById(R.id.tv_history_continents_count)
         yearsCount = findViewById(R.id.tv_history_years_count)
         recyclerViewSavedFilms = findViewById(R.id.recycler_view_saved_films)
 
-        savedMovieAdapter = SavedMovieAdapter()
+        savedMovieAdapter = SavedMovieAdapter(dao, lifecycleScope)
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerViewSavedFilms.layoutManager = layoutManager
         recyclerViewSavedFilms.adapter = savedMovieAdapter
 
+        savedMovieAdapter.onMovieDeletedCallback = {
+            lifecycleScope.launch {
+                updateUserProfileCounts()
+            }
+        }
+
+        loadProfileInfo()
+
+    }
+
+    private fun configureToolbar(toolbar: Toolbar) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.background))
+    }
+
+    private suspend fun updateUserProfileCounts() {
+        withContext(Dispatchers.IO) {
+            val title = dao.getTitle()
+            val filmsCount = dao.getFilmsCount()
+            val countriesCount = dao.getCountriesCount()
+            val continentsCount = dao.getContinentsCount()
+            val yearsCount = dao.getYearsCount()
+
+            val currentProfile = dao.getProfile()
+            if (currentProfile != null) {
+                val updatedProfile = currentProfile.copy(
+                    title = title,
+                    filmsCount = filmsCount,
+                    countriesCount = countriesCount,
+                    continentsCount = continentsCount,
+                    yearsCount = yearsCount
+                )
+                dao.updateUserProfile(updatedProfile)
+            }
+        }
+        loadProfileInfo()
+    }
+
+    private fun loadProfileInfo(){
         lifecycleScope.launch {
             val numberFilms = dao.getFilmsCount()
 
@@ -75,19 +115,13 @@ class HistoryActivity : AppCompatActivity() {
 
             filmsCount.text = getString(R.string.tv_history_films_count, numberFilms)
             countriesCount.text = getString(R.string.tv_history_countries_count, dao.getCountriesCount())
-            continentsCount.text = getString(R.string.tv_history_continents_count, dao.getContinentsCount())
             yearsCount.text = getString(R.string.tv_history_years_count, dao.getYearsCount())
 
             dao.getSavedMovieForProfile(1).collectLatest { savedMovies ->
                 savedMovieAdapter.submitList(savedMovies)
             }
+
         }
-
-    }
-
-    private fun configureToolbar(toolbar: Toolbar) {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.background))
     }
 
 }

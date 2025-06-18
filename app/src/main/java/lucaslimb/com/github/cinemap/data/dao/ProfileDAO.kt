@@ -1,6 +1,7 @@
 package lucaslimb.com.github.cinemap.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -25,6 +26,9 @@ interface ProfileDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun saveMovie(movie: SavedMovie): Long
+
+    @Delete
+    suspend fun deleteMovie(movie: SavedMovie)
 
     @Query("SELECT * FROM saved_movie WHERE profileId = :profileId ORDER BY country DESC")
     fun getSavedMovieForProfile(profileId: Int): Flow<List<SavedMovie>>

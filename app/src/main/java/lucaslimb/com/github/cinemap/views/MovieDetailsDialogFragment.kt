@@ -127,28 +127,6 @@ class MovieDetailsDialogFragment : DialogFragment() {
 
     }
 
-    private suspend fun updateUserProfileCounts() {
-        withContext(Dispatchers.IO) {
-            val title = dao.getTitle()
-            val filmsCount = dao.getFilmsCount()
-            val countriesCount = dao.getCountriesCount()
-            val yearsCount = dao.getYearsCount()
-            val continentsCount = dao.getContinentsCount()
-
-            val currentProfile = dao.getProfile()
-            if (currentProfile != null) {
-                val updatedProfile = currentProfile.copy(
-                    title = title,
-                    filmsCount = filmsCount,
-                    countriesCount = countriesCount,
-                    continentsCount = continentsCount,
-                    yearsCount = yearsCount
-                )
-                dao.updateUserProfile(updatedProfile)
-            }
-        }
-    }
-
     private suspend fun save(movieInfo: MovieMarkerInfo){
         val newSavedMovie = SavedMovie(
             profileId = 1,

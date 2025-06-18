@@ -15,7 +15,7 @@
     <string name="tv_history_profile_title">%s</string>
     <string name="tv_history_films_count">"Films discovered: %d"</string>
     <string name="tv_history_countries_count">"Countries explored: %d"</string>
-    <string name="tv_history_continents_count">"Continents explored: %d"</string>
+    <string name="tv_history_continents_count">"Continents explored: soon"</string>
     <string name="tv_history_years_count">"Years of expedition: %d"</string>
     <string name="et_search_countries">search countries...</string>
     <string name="ib_search_button_ct">Search button</string>
