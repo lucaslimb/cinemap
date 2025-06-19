@@ -8,6 +8,8 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.res.Resources
 import android.location.Geocoder
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -59,6 +61,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
     private lateinit var geocoder: Geocoder
+
+    private lateinit var soundPool: SoundPool
+    private var sliderSoundId: Int = 0
+    private var markerSoundId: Int = 0
 
     private val discoveredMovies = mutableListOf<MovieMarkerInfo>()
     private var lastSearchedYear: Int? = null
@@ -125,11 +131,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         }
 
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(3)
+            .setAudioAttributes(audioAttributes)
+            .build()
+
+        sliderSoundId = soundPool.load(this, R.raw.pop_slider, 1)
+        markerSoundId = soundPool.load(this, R.raw.pop_marker, 1)
+
         val timelineSlider: TimelineSliderView = findViewById(R.id.timelineSlider)
         val yearDisplay: TextView = findViewById(R.id.tv_year)
 
         timelineSlider.onYearSelected = { year ->
             yearDisplay.text = year.toString()
+            soundPool.play(sliderSoundId, 0.1f, 0.1f, 0, 0, 1f)
         }
 
         timelineSlider.onYearSettled = { year ->
@@ -425,6 +445,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             val marker = googleMap.addMarker(customMarkerOptions)
             marker?.tag = movieInfo
             marker?.title = movieInfo.originalTitle
+
+            soundPool.play(markerSoundId, 0.1f, 0.1f, 0, 0, 1f)
         }
     }
 
@@ -481,6 +503,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onPause()
     }
 
+    //testar aqui o cleaning TODO
     override fun onDestroy() {
         mapView.onDestroy()
         super.onDestroy()
@@ -488,6 +511,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         currentDiscoverResponse = null
         lastSearchedBounds = null
         currentSearchCenter = null
+        soundPool.release()
     }
 
     override fun onLowMemory() {
