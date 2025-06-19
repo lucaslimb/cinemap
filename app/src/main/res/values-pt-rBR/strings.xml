@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cinemap</string>
+    <string name="ib_settings_button">Botão do perfil</string>
+    <string name="marker_poster_image_cd">Imagem do poster</string>
+    <string name="info_original_title">Título original</string>
+    <string name="info_country">Gênero</string>
+    <string name="info_director">Diretor</string>
+    <string name="btn_clearmap">limpar mapa</string>
+    <string name="btn_save">Botão de salvar</string>
+    <string name="ib_back">Botão de voltar</string>
+    <string name="tv_history_title">Seu histórico de expedições</string>
+    <string name="tv_history_films_count">Filmes descobertos: %d</string>
+    <string name="tv_history_countries_count">Países explorados: %d</string>
+    <string name="tv_history_continents_count">Continentes explorados: EM BREVE</string>
+    <string name="tv_history_years_count">Anos em expedição: %d</string>
+    <string name="et_search_countries">pesquisar país...</string>
+    <string name="ib_search_button_ct">Botão de pesquisar</string>
+    <string name="tv_config_title">Configurações</string>
+    <string name="hints">Dicas:</string>
+    <string name="hints_text">marque a roda dos ventos para salvar filmes que você gosta e construa seu histórico de expedições</string>
+    <string name="tv_btn_saved_title">"Mostrar no mapa filmes salvos "</string>
+    <string name="yes">sim</string>
+    <string name="no">não</string>
+    <string name="cb_config_mode_prod">país produtor</string>
+    <string name="cb_config_mode_location">locação</string>
+    <string name="tv_btn_mode_title">Modo do mapa (EM BREVE)</string>
+    <string name="tv_btn_year_title">Modo de calendário (EM BREVE)</string>
+    <string name="cb_config_year_release">data de lançamento</string>
+    <string name="cb_config_year_setin">ano em que se passa</string>
+    <string name="cb_config_lang_original">original</string>
+    <string name="cb_config_lang_inter">internacional</string>
+    <string name="tv_btn_lang_title">Idioma dos títulos</string>
+    <string name="credits">Créditos</string>
+    <string name="tv_app_lang_title">Idioma do app</string>
+    <string name="tv_app_lang">Mesmo do dispositivo</string>
+    <string name="tv_sf_title">Título</string>
+    <string name="tv_sf_director">Diretor</string>
+</resources>
