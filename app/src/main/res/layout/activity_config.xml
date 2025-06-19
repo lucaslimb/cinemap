@@ -220,6 +220,30 @@
             </RadioGroup>
 
     <TextView
+        android:id="@+id/tv_app_lang_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_app_lang_title"
+        android:textColor="@color/black"
+        android:fontFamily="@font/courierprime_regular"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        />
+
+        <TextView
+            android:id="@+id/tv_app_lang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_app_lang"
+            android:textColor="@color/font_grey"
+            android:textSize="16sp"
+            android:fontFamily="@font/courierprime_regular"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            />
+
+    <TextView
         android:id="@+id/tv_credits_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

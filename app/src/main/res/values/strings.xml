@@ -36,4 +36,13 @@
     <string name="tv_btn_lang_title">Film\'s title language</string>
     <string name="credits">Credits</string>
     <string name="credits_text">Github: github.com/lucaslimb\nEmail: lucasdelimabzr@gmail.com\nLetterboxd: limapictures\nAll data provided by\nTMDB API\nGoogle Maps API</string>
+    <string name="tv_app_lang_title">App language</string>
+    <string name="select_language">Select language:</string>
+    <string name="tv_app_lang">Same as device</string>
+    <string-array name="languages_array">
+        <item>Portuguese</item>
+        <item>English</item>
+        <item>Spanish</item>
+        <item>French</item>
+    </string-array>
 </resources>
