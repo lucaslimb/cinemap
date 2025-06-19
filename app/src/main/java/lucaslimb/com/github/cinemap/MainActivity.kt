@@ -251,10 +251,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val currentBounds = googleMap.projection.visibleRegion.latLngBounds
 
         lifecycleScope.launch(Dispatchers.Main) {
-            val countryCode = getCountryCodeFromLatLng(currentLatLng)
+            var countryCode = getCountryCodeFromLatLng(currentLatLng)
             if (countryCode.isNullOrEmpty()) {
                 Log.w(TAG, "Não foi possível determinar o código do país para $currentLatLng")
                 return@launch
+            }
+            if(currentYear <= 1991){
+                if(countryCode == "RU" || countryCode == "UA" ||
+                    countryCode == "BY" || countryCode == "EE" ||
+                    countryCode == "LV" || countryCode == "LT" ||
+                    countryCode == "MD" || countryCode == "GE" ||
+                    countryCode == "AM" || countryCode == "AZ" ||
+                    countryCode == "KZ" || countryCode == "UZ" ||
+                    countryCode == "TM" || countryCode == "TJ" ||
+                    countryCode == "KG") {
+                countryCode = "SU"
+                }
+            }
+            if(currentYear <= 1993){
+                if(countryCode == "CZ" ||  countryCode == "SK") {
+                    countryCode = "XC"
+                }
+            }
+            if(currentYear <= 2010){
+                if(countryCode == "CW" ||  countryCode == "SX" ||
+                    countryCode == "BQ") {
+                    countryCode = "AN"
+                }
             }
 
             val yearChanged = (currentYear != lastSearchedYear)
@@ -424,7 +447,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
                 if (!addresses.isNullOrEmpty()) {
                     val countryCode = addresses[0].countryCode
-                    Log.d(TAG, "País para ${latLng.latitude}, ${latLng.longitude}: $countryCode")
                     countryCode
                 } else {
                     null
