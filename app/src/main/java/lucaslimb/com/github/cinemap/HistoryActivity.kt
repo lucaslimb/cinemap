@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +27,9 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var countriesCount: TextView
     private lateinit var continentsCount: TextView
     private lateinit var yearsCount: TextView
+    private lateinit var tvOneliner: TextView
+    private val pagerSnapHelper = PagerSnapHelper()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,21 +55,68 @@ class HistoryActivity : AppCompatActivity() {
         countriesCount = findViewById(R.id.tv_history_countries_count)
         yearsCount = findViewById(R.id.tv_history_years_count)
         recyclerViewSavedFilms = findViewById(R.id.recycler_view_saved_films)
+        tvOneliner = findViewById<TextView>(R.id.tv_sf_oneliner)
 
         savedMovieAdapter = SavedMovieAdapter(dao, lifecycleScope)
-
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerViewSavedFilms.layoutManager = layoutManager
         recyclerViewSavedFilms.adapter = savedMovieAdapter
+        pagerSnapHelper.attachToRecyclerView(recyclerViewSavedFilms)
 
         savedMovieAdapter.onMovieDeletedCallback = {
             lifecycleScope.launch {
                 updateUserProfileCounts()
             }
         }
+        recyclerViewSavedFilms.post {
+            val recyclerViewWidthPx = recyclerViewSavedFilms.width
+            val displayMetrics = resources.displayMetrics
+            val itemWidthDp = 150f
+            val calculatedItemWidthPx = (itemWidthDp * displayMetrics.density).toInt()
+
+            val horizontalPadding = (recyclerViewWidthPx / 2) - (calculatedItemWidthPx / 2)
+            recyclerViewSavedFilms.setPadding(horizontalPadding, 0, horizontalPadding, 0)
+            recyclerViewSavedFilms.clipToPadding = false
+        }
+        recyclerViewSavedFilms.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                updatePrincipalMovieInfo()
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    updatePrincipalMovieInfo()
+                }
+            }
+        })
+
+        recyclerViewSavedFilms.post {
+            updatePrincipalMovieInfo()
+        }
 
         loadProfileInfo()
 
+    }
+
+    private fun updatePrincipalMovieInfo() {
+        val layoutManager = recyclerViewSavedFilms.layoutManager as? LinearLayoutManager
+        layoutManager?.let {
+            val snapView = pagerSnapHelper.findSnapView(it) // Usando a instância única
+
+            if (snapView != null) {
+                val snappedPosition = it.getPosition(snapView)
+                if (snappedPosition != RecyclerView.NO_POSITION) {
+                    val principalMovie = savedMovieAdapter.getMovieAtPosition(snappedPosition)
+                    tvOneliner.text = principalMovie.tagline ?: ""
+                } else {
+                    tvOneliner.text = ""
+                }
+            } else {
+                tvOneliner.text = ""
+            }
+        }
     }
 
     private fun configureToolbar(toolbar: Toolbar) {

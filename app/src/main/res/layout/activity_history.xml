@@ -88,13 +88,27 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_saved_films"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="50dp"
-        android:layout_marginStart="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingStart="95dp"
+        android:paddingEnd="95dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_recycler_saved_films" />
+        tools:listitem="@layout/item_recycler_saved_films"
+        android:clipToPadding="false"/>
+
+    <TextView
+        android:id="@+id/tv_sf_oneliner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/courierprime_regular"
+        android:text="@string/tv_sf_oneliner"
+        android:textColor="@color/font_grey"
+        android:textSize="18sp" />
 
 
 </LinearLayout>

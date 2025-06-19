@@ -12,7 +12,7 @@ import lucaslimb.com.github.cinemap.data.dao.ProfileDAO
 import lucaslimb.com.github.cinemap.data.models.Profile
 import lucaslimb.com.github.cinemap.data.models.SavedMovie
 
-@Database(entities = [Profile::class, SavedMovie::class], version = 1, exportSchema = false)
+@Database(entities = [Profile::class, SavedMovie::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun profileDao(): ProfileDAO
@@ -61,6 +61,27 @@ abstract class AppDatabase : RoomDatabase() {
                     }
                 }
             }
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+                INSTANCE?.let { database ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val profileDao = database.profileDao()
+                        val existingProfile = profileDao.getProfile()
+                        if (existingProfile == null) {
+                            val defaultProfile = Profile(
+                                id = 1,
+                                title = "A hobbit on an unexpected journey",
+                                filmsCount = 0,
+                                countriesCount = 0,
+                                continentsCount = 0,
+                                yearsCount = 0
+                            )
+                            profileDao.insertUserProfile(defaultProfile)
+                        }
+                    }
+                }
+            }
         }
+
     }
 }

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,16 +27,23 @@ class SavedMovieAdapter(private val dao: ProfileDAO,
 
     var onMovieDeletedCallback: (() -> Unit)? = null
 
+    fun getMovieAtPosition(position: Int): SavedMovie {
+        return getItem(position)
+    }
+
     inner class SavedMovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val posterImageView: ImageView = itemView.findViewById(R.id.item_info_image)
         val btnRemove: ImageButton = itemView.findViewById(R.id.btn_remove)
         val frameRemove: FrameLayout = itemView.findViewById(R.id.btn_remove_frame)
         val frameMovie: FrameLayout = itemView.findViewById(R.id.saved_movie_poster_frame)
 
+        val cornerRadiusDp = 8f
+        val cornerRadiusPx = (itemView.context.resources.displayMetrics.density * cornerRadiusDp).toInt()
         fun bind(movie: SavedMovie) {
             if (!movie.posterUrl.isNullOrEmpty()) {
                 Glide.with(itemView.context)
                     .load(movie.posterUrl)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(cornerRadiusPx)))
                     .placeholder(R.drawable.placeholder_poster)
                     .error(R.drawable.placeholder_poster)
                     .into(posterImageView)

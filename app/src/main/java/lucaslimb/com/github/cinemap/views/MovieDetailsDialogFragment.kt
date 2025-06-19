@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -72,9 +74,14 @@ class MovieDetailsDialogFragment : DialogFragment() {
                 "${movieInfo.duration?.toString() ?: resources.getString(R.string.na)} min"
             tvDirector.text = movieInfo.director
 
+
+            val cornerRadiusDp = 21f
+            val cornerRadiusPx = (view.context.resources.displayMetrics.density * cornerRadiusDp).toInt()
+
             if (!movieInfo.posterUrl.isNullOrEmpty()) {
                 Glide.with(this)
                     .load(movieInfo.posterUrl)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(cornerRadiusPx)))
                     .placeholder(R.drawable.placeholder_poster)
                     .error(R.drawable.placeholder_poster)
                     .into(ivPoster)
@@ -128,16 +135,29 @@ class MovieDetailsDialogFragment : DialogFragment() {
     }
 
     private suspend fun save(movieInfo: MovieMarkerInfo){
+        val profile = dao.getProfile() // Use o método correto para obter o perfil
+        if (profile == null) {
+            println("Erro: Perfil padrão não encontrado. Impossível salvar o filme.")
+            return
+        }
+
         val newSavedMovie = SavedMovie(
-            profileId = 1,
+            profileId = profile.id,
             movieId = movieInfo.movieId,
             title = movieInfo.originalTitle,
             posterUrl = movieInfo.posterUrl,
             director = movieInfo.director,
             country = movieInfo.country,
-            releaseYear = movieInfo.releaseYear
+            releaseYear = movieInfo.releaseYear,
+            tagline = movieInfo.tagline
         )
-        val rowId = dao.saveMovie(newSavedMovie)
+        try {
+            dao.saveMovie(newSavedMovie)
+            println("Filme salvo com sucesso!")
+        } catch (e: Exception) {
+            println("Erro ao salvar filme: ${e.message}")
+            e.printStackTrace()
+        }
     }
 
 }

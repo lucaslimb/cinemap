@@ -39,6 +39,9 @@
     <string name="tv_app_lang_title">App language</string>
     <string name="select_language">Select language:</string>
     <string name="tv_app_lang">Same as device</string>
+    <string name="tv_sf_title">Title</string>
+    <string name="tv_sf_director">Director</string>
+    <string name="tv_sf_oneliner">oneliner</string>
     <string-array name="languages_array">
         <item>Portuguese</item>
         <item>English</item>

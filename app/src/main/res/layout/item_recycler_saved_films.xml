@@ -2,8 +2,8 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_movie_poster_frame"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="150dp"
+    android:layout_height="250dp"
     android:layout_gravity="center"
     android:orientation="vertical"
     android:layout_margin="10dp"
@@ -11,8 +11,8 @@
 
         <FrameLayout
             android:id="@+id/btn_remove_frame"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/rounded_info_window_bg_darker"
             android:visibility="invisible">
@@ -31,20 +31,20 @@
 
         <FrameLayout
             android:id="@+id/saved_movie_poster_frame"
-            android:layout_width="130dp"
-            android:layout_height="204dp"
-            android:foreground="@drawable/rounded_image_background_big"
+            android:layout_width="150dp"
+            android:layout_height="224dp"
             android:layout_gravity="center"
             >
 
                 <ImageView
                     android:id="@+id/item_info_image"
                     android:layout_gravity="center"
-                    android:layout_width="121dp"
-                    android:layout_height="196dp"
+                    android:layout_width="150dp"
+                    android:layout_height="224dp"
                     android:contentDescription="@string/marker_poster_image_cd"
                     android:scaleType="centerCrop"
                     android:src="@drawable/placeholder_poster"
+
                     />
         </FrameLayout>
 

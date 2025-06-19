@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private var lastSearchedCountryCode: String? = null
     private var currentDiscoverResponse: MovieSearchResponse? = null
     private var currentMoviePageIndex: Int = 0
-    private val PAGE_SIZE = 5
+    private val pageSize = 5
     private var tmdbPageNumber: Int = 1
     private var lastSearchedBounds: LatLngBounds? = null
     private var currentSearchCenter: LatLng? = null
@@ -285,7 +287,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 fetchNewTmdbPage = true
             } else {
                 val totalResultsOnCurrentTmdbPage = currentDiscoverResponse?.results?.size ?: 0
-                val allMoviesFromCurrentTmdbPageProcessed = (currentMoviePageIndex * PAGE_SIZE >= totalResultsOnCurrentTmdbPage)
+                val allMoviesFromCurrentTmdbPageProcessed = (currentMoviePageIndex * pageSize >= totalResultsOnCurrentTmdbPage)
                 val movedSignificantly = currentSearchCenter != null &&
                         hypot(
                             currentLatLng.latitude - currentSearchCenter!!.latitude,
@@ -299,7 +301,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     currentMoviePageIndex = 0
                     fetchNewTmdbPage = true
                 } else if (!allMoviesFromCurrentTmdbPageProcessed) {
-                    Log.d(TAG, "CENÁRIO 3b (Ano e País iguais, filmes da página atual ainda não processados): Carregando próximos $PAGE_SIZE filmes da resposta cacheada.")
+                    Log.d(TAG, "CENÁRIO 3b (Ano e País iguais, filmes da página atual ainda não processados): Carregando próximos $pageSize filmes da resposta cacheada.")
                 } else {
                     Log.d(TAG, "CENÁRIO 3c (Ano e País iguais, todos os filmes da página atual processados, mas usuário NÃO saiu da área): Não há mais filmes para carregar nesta área.")
                     return@launch
@@ -329,9 +331,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
 
-            val startIndex = currentMoviePageIndex * PAGE_SIZE
+            val startIndex = currentMoviePageIndex * pageSize
             val totalResults = currentDiscoverResponse?.results?.size ?: 0
-            val endIndex = minOf(startIndex + PAGE_SIZE, totalResults)
+            val endIndex = minOf(startIndex + pageSize, totalResults)
 
             if (startIndex >= totalResults) {
                 Log.d(TAG, "Nenhum filme encontrado para a página atual ou critério. Ou todos os filmes da página TMDB foram processados.")
@@ -375,6 +377,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     val posterPath = movieDetails.posterPath
                     val duration = movieDetails.runtime
                     val mainGenre = movieDetails.genres.firstOrNull()?.name ?: "N/A"
+                    val tagline = movieDetails.tagline ?: "N/A"
                     val countryName = movieDetails.productionCountries?.firstOrNull().toString()
                     val releaseYear = movieDetails.releaseDate.split("-").firstOrNull()?.toIntOrNull()
                     val isAdult = movieDetails.adult
@@ -389,7 +392,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         mainGenre = mainGenre,
                         posterUrl = fullPosterUrl,
                         country = countryName,
-                        releaseYear = releaseYear
+                        releaseYear = releaseYear,
+                        tagline = tagline
                     )
 
                     if(!isAdult && duration != 0 && posterPath != null) {
@@ -527,10 +531,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val markerView = LayoutInflater.from(context).inflate(R.layout.custom_marker_brown, null)
         val markerImage = markerView.findViewById<ImageView>(R.id.marker_image)
 
+        val cornerRadiusDp = 8f
+        val cornerRadiusPx = (context.resources.displayMetrics.density * cornerRadiusDp).toInt()
+
         if (!imageUrl.isNullOrEmpty()) {
             Glide.with(context)
                 .asBitmap()
                 .load(imageUrl)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(cornerRadiusPx)))
                 .override(POSTER_TARGET_WIDTH, POSTER_TARGET_HEIGHT)
                 .centerCrop()
                 .into(object : CustomTarget<Bitmap>() {
