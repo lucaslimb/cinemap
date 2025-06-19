@@ -40,6 +40,11 @@ class HistoryActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+        val btnConfig: ImageButton = findViewById(R.id.toolbar_history_btn_settings)
+        btnConfig.setOnClickListener {
+            val intent = Intent(this, ConfigActivity::class.java)
+            startActivity(intent)
+        }
 
         title = findViewById(R.id.tv_history_profile_title)
         filmsCount = findViewById(R.id.tv_history_films_count)

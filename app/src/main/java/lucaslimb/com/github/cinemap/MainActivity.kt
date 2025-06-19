@@ -47,6 +47,7 @@ import lucaslimb.com.github.cinemap.data.models.MovieCreditsResponse
 import lucaslimb.com.github.cinemap.data.models.MovieDetailsResponse
 import lucaslimb.com.github.cinemap.data.models.MovieMarkerInfo
 import lucaslimb.com.github.cinemap.data.models.MovieSearchResponse
+import lucaslimb.com.github.cinemap.utils.Constants
 import java.io.IOException
 import java.util.Locale
 import kotlin.math.hypot
@@ -68,6 +69,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private var tmdbPageNumber: Int = 1
     private var lastSearchedBounds: LatLngBounds? = null
     private var currentSearchCenter: LatLng? = null
+    private var originalLang: Boolean = true
+    private var showSaved: Boolean = false
 
     private companion object {
         private const val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
@@ -82,7 +85,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         setContentView(R.layout.activity_main)
 
         dao = AppDatabase.getDatabase(this).profileDao()
-
         geocoder = Geocoder(this, Locale.getDefault())
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -96,9 +98,30 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val btnSearch: ImageButton = findViewById(R.id.btn_search)
         btnSearch.setOnClickListener {
             val countrySearched = findViewById<EditText>(R.id.et_country_search).text.toString().trim()
-
             lifecycleScope.launch {
                 searchCountry(countrySearched)
+            }
+        }
+
+        val sharedPrefs = getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+
+        val selectedLangId = sharedPrefs.getInt(Constants.PREF_KEY_LANG_SELECTION, R.id.cb_config_lang_inter)
+        when (selectedLangId) {
+            R.id.cb_config_lang_original -> {
+                originalLang = true
+            }
+            R.id.cb_config_lang_inter -> {
+                originalLang = false
+            }
+        }
+
+        val selectedSavedId = sharedPrefs.getInt(Constants.PREF_KEY_SAVED_SELECTION, R.id.cb_config_saved_no)
+        when (selectedSavedId) {
+            R.id.cb_config_saved_yes -> {
+                showSaved = true
+            }
+            R.id.cb_config_saved_no -> {
+                showSaved = false
             }
         }
 
@@ -325,7 +348,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     )
 
                     val director = movieCredits.crew.firstOrNull { it.job == "Director" }?.name ?: "N/A"
-                    val originalTitle = movieDetails.originalTitle
+                    var originalTitle = movieDetails.originalTitle
+                    if(!originalLang) {
+                        originalTitle = movieDetails.title
+                    }
                     val posterPath = movieDetails.posterPath
                     val duration = movieDetails.runtime
                     val mainGenre = movieDetails.genres.firstOrNull()?.name ?: "N/A"
@@ -347,8 +373,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     )
 
                     if(!isAdult && duration != 0 && posterPath != null) {
-                        discoveredMovies.add(movieMarkerInfo)
-                        addSingleMovieMarker(movieMarkerInfo, currentLatLng, indexInBatch)
+                        if(!showSaved) {
+                            if(!dao.isMovieSaved(movieFound.id, 1)){
+                                discoveredMovies.add(movieMarkerInfo)
+                                addSingleMovieMarker(movieMarkerInfo, currentLatLng, indexInBatch)
+                            } else{
+                                continue
+                            }
+                        } else{
+                            discoveredMovies.add(movieMarkerInfo)
+                            addSingleMovieMarker(movieMarkerInfo, currentLatLng, indexInBatch)
+                        }
+                        continue
                     }
 
                 } catch (e: Exception) {

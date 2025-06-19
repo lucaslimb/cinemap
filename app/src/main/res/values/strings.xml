@@ -15,8 +15,34 @@
     <string name="tv_history_profile_title">%s</string>
     <string name="tv_history_films_count">"Films discovered: %d"</string>
     <string name="tv_history_countries_count">"Countries explored: %d"</string>
-    <string name="tv_history_continents_count">"Continents explored: soon"</string>
+    <string name="tv_history_continents_count">"Continents explored: SOON"</string>
     <string name="tv_history_years_count">"Years of expedition: %d"</string>
     <string name="et_search_countries">search countries...</string>
     <string name="ib_search_button_ct">Search button</string>
+    <string name="tv_config_title">Settings</string>
+    <string name="hints">Hints:</string>
+    <string name="hints_text">mark the compass rose to save films you like and build your expedition history</string>
+    <string name="tv_btn_saved_title">Show already saved films on map</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="cb_config_mode_prod">production country</string>
+    <string name="cb_config_mode_location">location</string>
+    <string name="tv_btn_mode_title">Map mode (SOON)</string>
+    <string name="tv_btn_year_title">Calendar mode (SOON)</string>
+    <string name="cb_config_year_release">release date</string>
+    <string name="cb_config_year_setin">set in</string>
+    <string name="cb_config_lang_original">original</string>
+    <string name="cb_config_lang_inter">international</string>
+    <string name="tv_btn_lang_title">Film\'s title language</string>
+    <string name="credits">Credits</string>
+    <string name="credits_text">Github: github.com/lucaslimb\nEmail: lucasdelimabzr@gmail.com\nLetterboxd: limapictures\nAll data provided by\nTMDB API\nGoogle Maps API</string>
+    <string name="tv_app_lang_title">App language</string>
+    <string name="select_language">Select language:</string>
+    <string name="tv_app_lang">Same as device</string>
+    <string-array name="languages_array">
+        <item>Portuguese</item>
+        <item>English</item>
+        <item>Spanish</item>
+        <item>French</item>
+    </string-array>
 </resources>
