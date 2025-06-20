@@ -16,6 +16,8 @@
 - **Exploration History** — Track your discovery journey across countries and time.
 - **Nametags** — Unlock custom profile titles based on the number of saved films.
 
+  Available in English, Portuguese, Spanish and French
+
 ---
 
 ## 📲 Try it on
