@@ -16,6 +16,8 @@
 - **Exploration History** — Track your discovery journey across countries and time.
 - **Nametags** — Unlock custom profile titles based on the number of saved films.
 
+  Available in English, Portuguese, Spanish and French
+
 ---
 
 ## 📲 Try it on
@@ -32,7 +34,7 @@
 
 3. **Download the latest APK:**
 
-    [Go to Releases](https://github.com/yourusername/cinemap/releases)  (Current version: **v1.0.0**)
+    [Go to Releases](https://github.com/lucaslimb/cinemap/releases)  (Current version: **v1.0.0**)
 
 ---
 
