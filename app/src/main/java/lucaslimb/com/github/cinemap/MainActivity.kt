@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private suspend fun searchCountry(countrySearched: String) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
             getLatLngFromCountryName(countrySearched)?: LatLng(11.1779, -35.212),
-            1f))
+            5f))
     }
 
     //Geocoder
