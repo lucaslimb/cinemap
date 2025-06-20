@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cinemap</string>
+    <string name="tv_btn_lang_title">Langue des titres</string>
+    <string name="credits">Crédits</string>
+    <string name="credits_text">Github: github.com/lucaslimb\\nEmail: lucasdelimabzr@gmail.com\\nLetterboxd: limapictures\\nToutes les data fournies par\\nTMDB API\\nGoogle Maps API</string>
+    <string name="tv_app_lang">Même que l\'appareil</string>
+    <string name="tv_sf_title">Titre</string>
+    <string name="tv_sf_director">Directeur</string>
+    <string name="tv_history_profile_0">En attente de votre prochaine aventure</string>
+    <string name="tv_history_profile_10">"Un hobbit en voyage inattendu "</string>
+    <string name="tv_history_profile_20">"Un voyageur de rêves "</string>
+    <string name="tv_history_profile_40">Un professeur d\'archéologie</string>
+    <string name="tv_history_profile_70">Un chevalier de la table ronde</string>
+    <string name="tv_history_profile_99">Un vagabond pieds nus Middle-Earth</string>
+    <string name="cb_config_year_setin">situé à</string>
+    <string name="cb_config_lang_original">original</string>
+    <string name="cb_config_lang_inter">international</string>
+    <string name="info_country">Genre</string>
+    <string name="info_director">Directeur</string>
+    <string name="ib_settings_button">Bouton de profil</string>
+    <string name="marker_poster_image_cd">"Image de l'affiche "</string>
+    <string name="info_original_title">Titre original</string>
+    <string name="btn_clearmap">"Effacer la carte "</string>
+    <string name="btn_save">Bouton d\'enregistrement</string>
+    <string name="ib_back">Bouton de retour</string>
+    <string name="tv_history_title">Votre historique d\'expéditions</string>
+    <string name="tv_history_profile_100">Un Odysseus spatial</string>
+    <string name="tv_btn_saved_title">Afficher les films déjá sauvegarder sur la carte</string>
+    <string name="yes">oui</string>
+    <string name="no">non</string>
+    <string name="et_search_countries">recherche un pays...</string>
+    <string name="ib_search_button_ct">Bouton de recherche</string>
+    <string name="tv_history_films_count">Films découverts : %d</string>
+    <string name="tv_history_countries_count">Pays explorés : %d</string>
+    <string name="tv_history_continents_count">Continents explorés : BIENTÔT</string>
+    <string name="tv_history_years_count">Années d\'expédition : %d</string>
+    <string name="tv_config_title">Paramètres</string>
+    <string name="hints">Suggestions :</string>
+    <string name="hints_text">marquez la rose des vent pour sauvegarder les films que vous aimez et construire votre historique d\'expéditions</string>
+    <string name="cb_config_mode_prod">pays de production</string>
+    <string name="cb_config_mode_location">lieu de tournage</string>
+    <string name="tv_btn_mode_title">Mode carte (BIENTÔT)</string>
+    <string name="tv_btn_year_title">Mode calendrier (BIENTÔT)</string>
+    <string name="cb_config_year_release">date de sortie</string>
+    <string name="tv_app_lang_title">Langue d\'application</string>
+</resources>

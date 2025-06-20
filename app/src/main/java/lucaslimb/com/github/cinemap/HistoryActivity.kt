@@ -153,19 +153,19 @@ class HistoryActivity : AppCompatActivity() {
 
             if(dao.getTitle() != "null"){
                 if(numberFilms == 0) {
-                    title.text = getString(R.string.tv_history_profile_title, "Awaiting your next journey")
+                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_0))
                 } else if (numberFilms <= 10) {
-                    title.text = getString(R.string.tv_history_profile_title, dao.getTitle())
+                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_10))
                 } else if (numberFilms <= 20){
-                    title.text = getString(R.string.tv_history_profile_title, "A dream traveler")
+                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_20))
                 } else if (numberFilms <= 40){
-                    title.text = getString(R.string.tv_history_profile_title, "A professor of archaeology")
+                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_40))
                 } else if (numberFilms <= 70){
-                    title.text = getString(R.string.tv_history_profile_title, "A knight of the round table")
+                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_70))
                 } else if (numberFilms <= 99){
-                    title.text = getString(R.string.tv_history_profile_title, "A barefoot wanderer of Middle-Earth")
+                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_99))
                 } else {
-                    title.text = getString(R.string.tv_history_profile_title, "A space Odysseus")
+                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_100))
                 }
             }
 
