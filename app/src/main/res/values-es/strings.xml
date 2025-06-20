@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tv_history_profile_0">Esperando tu próximo viaje</string>
+    <string name="tv_history_profile_10">Un hobbit en un viaje inesperado</string>
+    <string name="tv_history_profile_20">Un viajero de sueños</string>
+    <string name="tv_history_profile_40">Un profesor de arqueologia</string>
+    <string name="tv_history_profile_70">Un caballero de la mesa redonda</string>
+    <string name="tv_history_profile_99">Un vagabundo descalzo dela Tierra Media</string>
+    <string name="marker_poster_image_cd">Imagen del póster</string>
+    <string name="btn_clearmap">limpiar mapa</string>
+    <string name="btn_save">Botón de guardar</string>
+    <string name="ib_back">Botón de volver</string>
+    <string name="tv_history_profile_100">Un Odiseo espacial</string>
+    <string name="cb_config_lang_inter">internacional</string>
+    <string name="tv_btn_lang_title">Idioma de los títulos</string>
+    <string name="credits">Créditos</string>
+    <string name="credits_text">Github: github.com/lucaslimb\\nEmail: lucasdelimabzr@gmail.com\\nLetterboxd: limapictures\\nTodos los dados proporcionados por\\nTMDB API\\nGoogle Maps API</string>
+    <string name="hints">Consejos:</string>
+    <string name="hints_text">marca la rosa de los vientos para guardar las películas que te gustan y construir tu historial de expedición</string>
+    <string name="no">no</string>
+    <string name="cb_config_mode_prod">país produtor</string>
+    <string name="cb_config_mode_location">ubicacíon</string>
+    <string name="tv_btn_mode_title">Modo de mapa (PROXIMAMENTE)</string>
+    <string name="tv_btn_year_title">Modo de calendario (PROXIMAMENTE)</string>
+    <string name="cb_config_year_release">fecha de estreno</string>
+    <string name="tv_app_lang_title">Idioma de la aplicación</string>
+    <string name="tv_app_lang">Igual que el del dispositivo</string>
+    <string name="tv_sf_title">Título</string>
+    <string name="tv_sf_director">Director</string>
+    <string name="cb_config_year_setin">año de ambientación</string>
+    <string name="cb_config_lang_original">original</string>
+    <string name="info_country">género</string>
+    <string name="info_director">Director</string>
+    <string name="info_original_title">Título original</string>
+    <string name="tv_history_title">Tu historial de expediciones</string>
+    <string name="tv_btn_saved_title">Mostrar en el mapa las películas guardadas</string>
+    <string name="yes">sí</string>
+    <string name="ib_settings_button">Botón de perfil</string>
+    <string name="tv_history_years_count">Años em expedición: %d</string>
+    <string name="et_search_countries">bucar país...</string>
+    <string name="ib_search_button_ct">Botón de búsqueda</string>
+    <string name="tv_history_films_count">Películas descubiertas: %d</string>
+    <string name="tv_history_countries_count">Países explorados: %d</string>
+    <string name="tv_history_continents_count">Continentes explorados (PROXIMAMENTE)</string>
+    <string name="tv_config_title">Configuración</string>
+</resources>

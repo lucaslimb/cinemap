@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Cinemap</string>
     <string name="tv_btn_lang_title">Langue des titres</string>
     <string name="credits">Crédits</string>
     <string name="credits_text">Github: github.com/lucaslimb\\nEmail: lucasdelimabzr@gmail.com\\nLetterboxd: limapictures\\nToutes les data fournies par\\nTMDB API\\nGoogle Maps API</string>
@@ -21,7 +20,7 @@
     <string name="ib_settings_button">Bouton de profil</string>
     <string name="marker_poster_image_cd">"Image de l'affiche "</string>
     <string name="info_original_title">Titre original</string>
-    <string name="btn_clearmap">"Effacer la carte "</string>
+    <string name="btn_clearmap">"effacer la carte "</string>
     <string name="btn_save">Bouton d\'enregistrement</string>
     <string name="ib_back">Bouton de retour</string>
     <string name="tv_history_title">Votre historique d\'expéditions</string>

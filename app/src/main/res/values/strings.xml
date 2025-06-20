@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cinemap</string>
+    <string name="app_name" translatable="false">Cinemap</string>
     <string name="ib_settings_button">Profile button</string>
     <string name="year" translatable="false">1970</string>
     <string name="marker_poster_image_cd">Poster image</string>
@@ -41,7 +41,7 @@
     <string name="cb_config_lang_inter">international</string>
     <string name="tv_btn_lang_title">Film\'s title language</string>
     <string name="credits">Credits</string>
-    <string name="credits_text">Github: github.com/lucaslimb\nEmail: lucasdelimabzr@gmail.com\nLetterboxd: limapictures\nAll data provided by\nTMDB API\nGoogle Maps API</string>
+    <string name="credits_text">Github: github.com/lucaslimb Email: lucasdelimabzr@gmail.com Letterboxd: limapictures All data provided by TMDB API Google Maps API</string>
     <string name="tv_app_lang_title">App language</string>
     <string name="tv_app_lang">Same as device</string>
     <string name="tv_sf_title">Title</string>

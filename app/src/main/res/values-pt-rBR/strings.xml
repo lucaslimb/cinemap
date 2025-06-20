@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Cinemap</string>
     <string name="ib_settings_button">Botão do perfil</string>
     <string name="marker_poster_image_cd">Imagem do pôster</string>
     <string name="info_original_title">Título original</string>
@@ -19,16 +18,16 @@
     <string name="ib_search_button_ct">Botão de pesquisar</string>
     <string name="tv_config_title">Configurações</string>
     <string name="hints">Dicas:</string>
-    <string name="hints_text">marque a rosa dos ventos para salvar filmes que você gosta e construa seu histórico de expedições</string>
-    <string name="tv_btn_saved_title">"Mostrar no mapa filmes salvos "</string>
+    <string name="hints_text">marque a rosa dos ventos para salvar filmes que você gosta e monte seu histórico de expedições</string>
+    <string name="tv_btn_saved_title">"Mostrar no mapa filmes já salvos "</string>
     <string name="yes">sim</string>
     <string name="no">não</string>
     <string name="cb_config_mode_prod">país produtor</string>
-    <string name="cb_config_mode_location">locação</string>
-    <string name="tv_btn_mode_title">Modo do mapa (EM BREVE)</string>
+    <string name="cb_config_mode_location">localização</string>
+    <string name="tv_btn_mode_title">Modo de mapa (EM BREVE)</string>
     <string name="tv_btn_year_title">Modo de calendário (EM BREVE)</string>
     <string name="cb_config_year_release">data de lançamento</string>
-    <string name="cb_config_year_setin">ano em que se passa</string>
+    <string name="cb_config_year_setin">ano de ambientação</string>
     <string name="cb_config_lang_original">original</string>
     <string name="cb_config_lang_inter">internacional</string>
     <string name="tv_btn_lang_title">Idioma dos títulos</string>
@@ -38,7 +37,7 @@
     <string name="tv_app_lang">Mesmo do dispositivo</string>
     <string name="tv_sf_title">Título</string>
     <string name="tv_sf_director">Diretor</string>
-    <string name="tv_history_profile_0">À beira de sua próxima jornada</string>
+    <string name="tv_history_profile_0">Aguardando a sua próxima jornada</string>
     <string name="tv_history_profile_10">Um hobbit numa jornada inesperada</string>
     <string name="tv_history_profile_20">Um viajante dos sonhos</string>
     <string name="tv_history_profile_40">Um professor de arqueologia</string>
