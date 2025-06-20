@@ -30,10 +30,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders["MAPS_API_KEY"] = localProperties.getProperty("MAPS_API_KEY", "")
-
-        val tmdbApiKey = localProperties.getProperty("TMDB_API_KEY", "")
+        val tmdbApiKey = project.findProperty("TMDB_API_KEY") as String? ?: ""
         buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
+
+        val mapsApiKey = project.findProperty("MAPS_API_KEY") as String? ?: ""
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildFeatures {
