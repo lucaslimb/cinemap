@@ -34,7 +34,7 @@
 
 3. **Download the latest APK:**
 
-    [Go to Releases](https://github.com/yourusername/cinemap/releases)  (Current version: **v1.0.0**)
+    [Go to Releases](https://github.com/lucaslimb/cinemap/releases)  (Current version: **v1.0.0**)
 
 ---
 
