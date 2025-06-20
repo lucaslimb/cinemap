@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <FrameLayout
+        android:layout_width="70dp"
+        android:layout_height="110dp"
+        android:foreground="@drawable/rounded_image_background">
+
+        <ImageView
+            android:id="@+id/marker_image"
+            android:layout_gravity="center"
+            android:layout_width="64dp"
+            android:layout_height="105dp"
+            android:contentDescription="@string/marker_poster_image_cd"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_poster"
+            />
+    </FrameLayout>
+
+    <View
+        android:layout_width="24dp"
+        android:layout_height="12dp"
+        android:background="@drawable/marker_pin_triangle"
+        android:layout_marginTop="-3dp" />
+
+</LinearLayout>

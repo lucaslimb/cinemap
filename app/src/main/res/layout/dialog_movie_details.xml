@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <FrameLayout
+        android:id="@+id/btn_save_frame"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rounded_compass_background">
+
+        <ImageButton
+            android:id="@+id/btn_save"
+            android:layout_height="24dp"
+            android:layout_width="24dp"
+            android:contentDescription="@string/btn_save"
+            android:src="@drawable/compass_rose"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center"
+            />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/movie_poster_frame"
+        android:layout_width="200dp"
+        android:layout_height="315dp"
+        android:layout_gravity="center"
+        android:foreground="@drawable/rounded_image_background_big"
+        >
+
+        <ImageView
+            android:id="@+id/info_image"
+            android:layout_gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="315dp"
+            android:contentDescription="@string/marker_poster_image_cd"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_poster"
+            />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_info_window_background"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        >
+
+    <TextView
+        android:id="@+id/tv_title_info_window"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:text="@string/info_original_title"
+        android:fontFamily="@font/courierprime_regular"
+        android:gravity="center"
+        android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginTop="4dp"
+            >
+
+        <TextView
+            android:id="@+id/tv_country_info_window"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/slider_grey"
+            android:textSize="12sp"
+            android:text="@string/info_country"
+            android:fontFamily="@font/courierprime_regular"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_duration_info_window"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="@color/slider_grey"
+            android:textSize="12sp"
+            android:text="@string/info_duration"
+            android:fontFamily="@font/courierprime_regular"
+            android:gravity="center"/>
+
+        </LinearLayout>
+
+        <TextView
+        android:id="@+id/tv_director_info_window"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/slider_grey" android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        android:text="@string/info_director"
+        android:fontFamily="@font/courierprime_regular"
+        android:gravity="center" android:layout_marginBottom="4dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
