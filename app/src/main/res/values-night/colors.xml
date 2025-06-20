@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FFFFFFFF</color>
+    <color name="white">#FF000000</color>
+    <color name="background">#121212</color>
+    <color name="font_grey">#C9C9C9</color>
+    <color name="slider_grey">#AFAFAF</color>
+    <color name="marker_brown">#D2B48C</color>
+</resources>
