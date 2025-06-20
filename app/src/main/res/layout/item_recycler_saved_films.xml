@@ -2,21 +2,50 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_movie_poster_frame"
-    android:layout_width="130dp"
-    android:layout_height="204dp"
-    android:foreground="@drawable/rounded_image_background_big"
+    android:layout_width="150dp"
+    android:layout_height="250dp"
     android:layout_gravity="center"
-    android:orientation="horizontal"
-    android:layout_margin="10dp">
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:elevation="4dp">
 
-        <ImageView
-            android:id="@+id/item_info_image"
+        <FrameLayout
+            android:id="@+id/btn_remove_frame"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_info_window_bg_darker"
+            android:visibility="invisible">
+
+                <ImageButton
+                    android:id="@+id/btn_remove"
+                    android:layout_height="16dp"
+                    android:layout_width="16dp"
+                    android:contentDescription="@string/btn_save"
+                    android:src="@drawable/film_delete"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center"
+                    />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/saved_movie_poster_frame"
+            android:layout_width="150dp"
+            android:layout_height="224dp"
             android:layout_gravity="center"
-            android:layout_width="122dp"
-            android:layout_height="193dp"
-            android:layout_marginStart="3dp"
-            android:contentDescription="@string/marker_poster_image_cd"
-            android:scaleType="centerCrop"
-            android:src="@drawable/placeholder_poster" />
+            >
+
+                <ImageView
+                    android:id="@+id/item_info_image"
+                    android:layout_gravity="center"
+                    android:layout_width="150dp"
+                    android:layout_height="224dp"
+                    android:contentDescription="@string/marker_poster_image_cd"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder_poster"
+
+                    />
+        </FrameLayout>
 
 </LinearLayout>

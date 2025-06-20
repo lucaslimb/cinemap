@@ -13,7 +13,7 @@
         <ImageView
             android:id="@+id/marker_image"
             android:layout_gravity="center"
-            android:layout_width="65dp"
+            android:layout_width="64dp"
             android:layout_height="105dp"
             android:contentDescription="@string/marker_poster_image_cd"
             android:scaleType="centerCrop"

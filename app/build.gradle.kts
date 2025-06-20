@@ -1,23 +1,18 @@
 import java.util.Properties
-import java.io.FileInputStream // Adicionado para ler o arquivo
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    // alias(libs.plugins.kotlin.compose) // Parece que você não está usando o plugin kotlin.compose diretamente, mas sim através do compose.bom. Verifique se é necessário.
     kotlin("kapt")
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
-    // Se estiver usando Compose, o plugin Compose Compiler pode ser necessário:
-    // id("org.jetbrains.kotlin.plugin.compose") version "versao_do_plugin_compose" // Verifique a versão correta
 }
 
-// Bloco para carregar as propriedades do local.properties
 val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties") // Acessa o arquivo na raiz do projeto
+val localPropertiesFile = rootProject.file("local.properties")
 
 if (localPropertiesFile.exists() && localPropertiesFile.isFile) {
-    localPropertiesFile.inputStream().use { input -> // Maneira idiomática em Kotlin para ler arquivos
+    localPropertiesFile.inputStream().use { input ->
         localProperties.load(input)
     }
 }
@@ -64,10 +59,6 @@ android {
     buildFeatures {
         compose = true
     }
-    // Se estiver usando Compose, você pode precisar configurar o compilador do Compose aqui também
-    // composeOptions {
-    //     kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get() // Exemplo, ajuste conforme sua config de libs.versions
-    // }
 }
 
 dependencies {

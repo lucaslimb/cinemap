@@ -8,6 +8,8 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.res.Resources
 import android.location.Geocoder
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -47,6 +51,7 @@ import lucaslimb.com.github.cinemap.data.models.MovieCreditsResponse
 import lucaslimb.com.github.cinemap.data.models.MovieDetailsResponse
 import lucaslimb.com.github.cinemap.data.models.MovieMarkerInfo
 import lucaslimb.com.github.cinemap.data.models.MovieSearchResponse
+import lucaslimb.com.github.cinemap.utils.Constants
 import java.io.IOException
 import java.util.Locale
 import kotlin.math.hypot
@@ -59,15 +64,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var googleMap: GoogleMap
     private lateinit var geocoder: Geocoder
 
+    private lateinit var soundPool: SoundPool
+    private var sliderSoundId: Int = 0
+    private var markerSoundId: Int = 0
+
     private val discoveredMovies = mutableListOf<MovieMarkerInfo>()
     private var lastSearchedYear: Int? = null
     private var lastSearchedCountryCode: String? = null
     private var currentDiscoverResponse: MovieSearchResponse? = null
     private var currentMoviePageIndex: Int = 0
-    private val PAGE_SIZE = 5
+    private val pageSize = 5
     private var tmdbPageNumber: Int = 1
     private var lastSearchedBounds: LatLngBounds? = null
     private var currentSearchCenter: LatLng? = null
+    private var originalLang: Boolean = true
+    private var showSaved: Boolean = false
 
     private companion object {
         private const val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
@@ -82,7 +93,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         setContentView(R.layout.activity_main)
 
         dao = AppDatabase.getDatabase(this).profileDao()
-
         geocoder = Geocoder(this, Locale.getDefault())
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -93,24 +103,55 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             startActivity(intent)
         }
 
-        val countrySearched = findViewById<EditText>(R.id.et_country_search).text.toString()
         val btnSearch: ImageButton = findViewById(R.id.btn_search)
         btnSearch.setOnClickListener {
+            val countrySearched = findViewById<EditText>(R.id.et_country_search).text.toString().trim()
             lifecycleScope.launch {
                 searchCountry(countrySearched)
             }
         }
+
+        val sharedPrefs = getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+        val selectedLangId = sharedPrefs.getInt(Constants.PREF_KEY_LANG_SELECTION, R.id.cb_config_lang_inter)
+        when (selectedLangId) {
+            R.id.cb_config_lang_original -> {
+                originalLang = true
+            }
+            R.id.cb_config_lang_inter -> {
+                originalLang = false
+            }
+        }
+        val selectedSavedId = sharedPrefs.getInt(Constants.PREF_KEY_SAVED_SELECTION, R.id.cb_config_saved_no)
+        when (selectedSavedId) {
+            R.id.cb_config_saved_yes -> {
+                showSaved = true
+            }
+            R.id.cb_config_saved_no -> {
+                showSaved = false
+            }
+        }
+
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(3)
+            .setAudioAttributes(audioAttributes)
+            .build()
+        sliderSoundId = soundPool.load(this, R.raw.pop_slider, 1)
+        markerSoundId = soundPool.load(this, R.raw.pop_marker, 1)
 
         val timelineSlider: TimelineSliderView = findViewById(R.id.timelineSlider)
         val yearDisplay: TextView = findViewById(R.id.tv_year)
 
         timelineSlider.onYearSelected = { year ->
             yearDisplay.text = year.toString()
+            soundPool.play(sliderSoundId, 0.1f, 0.1f, 0, 0, 1f)
         }
 
         timelineSlider.onYearSettled = { year ->
             anoNovo = year
-            Log.d(TAG, "Ano alterado para: $anoNovo. Limpando tudo e iniciando nova busca.")
             lastSearchedYear = null
             lastSearchedCountryCode = null
             currentDiscoverResponse = null
@@ -136,67 +177,60 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mapView.getMapAsync(this)
     }
 
+    //App
+    private fun configureToolbar(toolbar: Toolbar) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.background))
+    }
+
     private suspend fun searchCountry(countrySearched: String) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
             getLatLngFromCountryName(countrySearched)?: LatLng(11.1779, -35.212),
             5f))
     }
 
+    //Geocoder
     private suspend fun getLatLngFromCountryName(countryName: String): LatLng? {
         return withContext(Dispatchers.IO) {
             try {
                 val addresses = geocoder.getFromLocationName(countryName, 5)
                 if (!addresses.isNullOrEmpty()) {
-                    for (address in addresses) {
-                        Log.d(TAG, "Resultado encontrado: ${address.featureName}, ${address.locality}, ${address.countryName}, lat: ${address.latitude}, lon: ${address.longitude}")
-                    }
                     val selected = addresses[0]
                     LatLng(selected.latitude, selected.longitude)
                 } else {
-                    Log.w(TAG, "Nenhum endereço encontrado para: $countryName")
                     null
                 }
             } catch (e: IOException) {
-                Log.e(TAG, "Erro de IO na geocodificação: ${e.message}", e)
                 null
             } catch (e: Exception) {
-                Log.e(TAG, "Erro inesperado na geocodificação: ${e.message}", e)
                 null
             }
         }
     }
 
-    private fun configureToolbar(toolbar: Toolbar) {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.background))
-    }
-
-    @SuppressLint("PotentialBehaviorOverride")
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        Log.d(TAG, "Mapa pronto!")
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(11.1779, -35.212), 1f))
-
-        try {
-            googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style)
-            )
-        } catch (e: Resources.NotFoundException) {
-            Log.e(TAG, "Não foi possível encontrar o estilo. Erro: ", e)
+    private suspend fun getCountryCodeFromLatLng(latLng: LatLng): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+                if (!addresses.isNullOrEmpty()) {
+                    val countryCode = addresses[0].countryCode
+                    countryCode
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                null
+            }
         }
-
-        googleMap.setOnMarkerClickListener(this)
-        googleMap.setOnCameraIdleListener(this)
     }
 
+    //Movie Search
     override fun onCameraIdle() {
         triggerMovieSearch()
     }
 
     private fun triggerMovieSearch() {
         if (!::googleMap.isInitialized) {
-            Log.w(TAG, "googleMap não inicializada, não é possível disparar a busca.")
             return
         }
 
@@ -205,10 +239,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val currentBounds = googleMap.projection.visibleRegion.latLngBounds
 
         lifecycleScope.launch(Dispatchers.Main) {
-            val countryCode = getCountryCodeFromLatLng(currentLatLng)
+            var countryCode = getCountryCodeFromLatLng(currentLatLng)
             if (countryCode.isNullOrEmpty()) {
-                Log.w(TAG, "Não foi possível determinar o código do país para $currentLatLng")
                 return@launch
+            }
+
+            if(currentYear <= 1991){
+                if(countryCode == "RU" || countryCode == "UA" ||
+                    countryCode == "BY" || countryCode == "EE" ||
+                    countryCode == "LV" || countryCode == "LT" ||
+                    countryCode == "MD" || countryCode == "GE" ||
+                    countryCode == "AM" || countryCode == "AZ" ||
+                    countryCode == "KZ" || countryCode == "UZ" ||
+                    countryCode == "TM" || countryCode == "TJ" ||
+                    countryCode == "KG") {
+                countryCode = "SU"
+                }
+            }
+            if(currentYear <= 1993){
+                if(countryCode == "CZ" ||  countryCode == "SK") {
+                    countryCode = "XC"
+                }
+            }
+            if(currentYear <= 2010){
+                if(countryCode == "CW" ||  countryCode == "SX" ||
+                    countryCode == "BQ") {
+                    countryCode = "AN"
+                }
             }
 
             val yearChanged = (currentYear != lastSearchedYear)
@@ -228,36 +285,31 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
             if (yearChanged || initialLoad) {
-                Log.d(TAG, "CENÁRIO 1 (Ano mudou ou Carga Inicial): Limpando tudo e fazendo nova API call.")
                 tmdbPageNumber = 1
                 currentMoviePageIndex = 0
                 discoveredMovies.clear()
                 googleMap.clear()
                 fetchNewTmdbPage = true
             } else if (countryChanged) {
-                Log.d(TAG, "CENÁRIO 2 (Ano igual, País mudou): Fazendo nova API call para novo país, sem limpar marcadores existentes.")
                 tmdbPageNumber = 1
                 currentMoviePageIndex = 0
                 fetchNewTmdbPage = true
             } else {
                 val totalResultsOnCurrentTmdbPage = currentDiscoverResponse?.results?.size ?: 0
-                val allMoviesFromCurrentTmdbPageProcessed = (currentMoviePageIndex * PAGE_SIZE >= totalResultsOnCurrentTmdbPage)
+                val allMoviesFromCurrentTmdbPageProcessed = (currentMoviePageIndex * pageSize >= totalResultsOnCurrentTmdbPage)
                 val movedSignificantly = currentSearchCenter != null &&
                         hypot(
                             currentLatLng.latitude - currentSearchCenter!!.latitude,
                             currentLatLng.longitude - currentSearchCenter!!.longitude
                         ) > MOVEMENT_THRESHOLD_DEGREES
 
-
                 if (allMoviesFromCurrentTmdbPageProcessed && movedSignificantly) {
-                    Log.d(TAG, "CENÁRIO 3a (Ano e País iguais, todos os filmes da página atual processados E usuário saiu da área): Carregando próxima página da API.")
                     tmdbPageNumber++
                     currentMoviePageIndex = 0
                     fetchNewTmdbPage = true
                 } else if (!allMoviesFromCurrentTmdbPageProcessed) {
-                    Log.d(TAG, "CENÁRIO 3b (Ano e País iguais, filmes da página atual ainda não processados): Carregando próximos $PAGE_SIZE filmes da resposta cacheada.")
+                    Log.d(TAG, "Ano e País iguais, filmes da página atual ainda não processados")
                 } else {
-                    Log.d(TAG, "CENÁRIO 3c (Ano e País iguais, todos os filmes da página atual processados, mas usuário NÃO saiu da área): Não há mais filmes para carregar nesta área.")
                     return@launch
                 }
             }
@@ -279,18 +331,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     currentDiscoverResponse = discoverResponse
                     lastSearchedBounds = currentBounds
                 } catch (e: Exception) {
-                    Log.e(TAG, "Erro ao buscar filmes da API para página $tmdbPageNumber: ${e.message}", e)
                     currentDiscoverResponse = null
                     moviesToProcess = emptyList()
                 }
             }
 
-            val startIndex = currentMoviePageIndex * PAGE_SIZE
+            val startIndex = currentMoviePageIndex * pageSize
             val totalResults = currentDiscoverResponse?.results?.size ?: 0
-            val endIndex = minOf(startIndex + PAGE_SIZE, totalResults)
+            val endIndex = minOf(startIndex + pageSize, totalResults)
 
             if (startIndex >= totalResults) {
-                Log.d(TAG, "Nenhum filme encontrado para a página atual ou critério. Ou todos os filmes da página TMDB foram processados.")
+
                 moviesToProcess = emptyList()
                 if (fetchNewTmdbPage && currentDiscoverResponse?.results.isNullOrEmpty()) {
                     Toast.makeText(this@MainActivity, "No more films found for this year and region.", Toast.LENGTH_SHORT).show()
@@ -301,13 +352,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
             if (moviesToProcess.isEmpty()) {
-                Log.w(TAG, "Nenhum filme a processar para a página atual ou critérios especificados.")
                 return@launch
             }
 
             for ((indexInBatch, movieFound) in moviesToProcess.withIndex()) {
                 if (discoveredMovies.any { it.movieId == movieFound.id }){
-                    Log.d(TAG, "Filme '${movieFound.original_title}' (ID: ${movieFound.id}) já está na lista 'discoveredMovies'. Ignorando.")
                     continue
                 }
 
@@ -324,10 +373,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     )
 
                     val director = movieCredits.crew.firstOrNull { it.job == "Director" }?.name ?: "N/A"
-                    val originalTitle = movieDetails.originalTitle
+                    var originalTitle = movieDetails.originalTitle
+                    if(!originalLang) {
+                        originalTitle = movieDetails.title
+                    }
                     val posterPath = movieDetails.posterPath
                     val duration = movieDetails.runtime
                     val mainGenre = movieDetails.genres.firstOrNull()?.name ?: "N/A"
+                    val tagline = movieDetails.tagline ?: "N/A"
                     val countryName = movieDetails.productionCountries?.firstOrNull().toString()
                     val releaseYear = movieDetails.releaseDate.split("-").firstOrNull()?.toIntOrNull()
                     val isAdult = movieDetails.adult
@@ -342,12 +395,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         mainGenre = mainGenre,
                         posterUrl = fullPosterUrl,
                         country = countryName,
-                        releaseYear = releaseYear
+                        releaseYear = releaseYear,
+                        tagline = tagline
                     )
 
                     if(!isAdult && duration != 0 && posterPath != null) {
-                        discoveredMovies.add(movieMarkerInfo)
-                        addSingleMovieMarker(movieMarkerInfo, currentLatLng, indexInBatch)
+                        if(!showSaved) {
+                            if(!dao.isMovieSaved(movieFound.id, 1)){
+                                discoveredMovies.add(movieMarkerInfo)
+                                addSingleMovieMarker(movieMarkerInfo, currentLatLng, indexInBatch)
+                            } else{
+                                continue
+                            }
+                        } else{
+                            discoveredMovies.add(movieMarkerInfo)
+                            addSingleMovieMarker(movieMarkerInfo, currentLatLng, indexInBatch)
+                        }
+                        continue
                     }
 
                 } catch (e: Exception) {
@@ -357,24 +421,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    private suspend fun getCountryCodeFromLatLng(latLng: LatLng): String? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                if (!addresses.isNullOrEmpty()) {
-                    val countryCode = addresses[0].countryCode
-                    Log.d(TAG, "País para ${latLng.latitude}, ${latLng.longitude}: $countryCode")
-                    countryCode
-                } else {
-                    null
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Erro na geocodificação reversa: ${e.message}", e)
-                null
-            }
-        }
-    }
-
+    //Maps markers
     private fun addSingleMovieMarker(movieInfo: MovieMarkerInfo, searchCenterLatLng: LatLng, markerIndex: Int) {
         lifecycleScope.launch(Dispatchers.Main) {
             val markerPosition = getOffsetLatLng(searchCenterLatLng, markerIndex)
@@ -388,6 +435,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             val marker = googleMap.addMarker(customMarkerOptions)
             marker?.tag = movieInfo
             marker?.title = movieInfo.originalTitle
+
+            soundPool.play(markerSoundId, 0.1f, 0.1f, 0, 0, 1f)
         }
     }
 
@@ -405,6 +454,71 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
+    private suspend fun createCustomMarkerOptions(
+        context: Context,
+        imageUrl: String?,
+        position: LatLng
+    ): MarkerOptions = suspendCancellableCoroutine { continuation ->
+        val markerView = LayoutInflater.from(context).inflate(R.layout.custom_marker_brown, null)
+        val markerImage = markerView.findViewById<ImageView>(R.id.marker_image)
+
+        val cornerRadiusDp = 8f
+        val cornerRadiusPx = (context.resources.displayMetrics.density * cornerRadiusDp).toInt()
+
+        if (!imageUrl.isNullOrEmpty()) {
+            Glide.with(context)
+                .asBitmap()
+                .load(imageUrl)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(cornerRadiusPx)))
+                .override(POSTER_TARGET_WIDTH, POSTER_TARGET_HEIGHT)
+                .centerCrop()
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        markerImage.setImageBitmap(resource)
+                        val bitmapDescriptor = createBitmapDescriptorFromView(markerView)
+                        continuation.resume(
+                            MarkerOptions()
+                                .position(position)
+                                .icon(bitmapDescriptor)
+                                .anchor(0.5f, 1.0f)
+                        )
+                    }
+
+                    override fun onLoadCleared(placeholder: android.graphics.drawable.Drawable?) {
+                        markerImage.setImageResource(R.drawable.placeholder_poster)
+                        val bitmapDescriptor = createBitmapDescriptorFromView(markerView)
+                        continuation.resume(
+                            MarkerOptions()
+                                .position(position)
+                                .icon(bitmapDescriptor)
+                                .anchor(0.5f, 1.0f)
+                        )
+                    }
+                })
+        } else {
+            markerImage.setImageResource(R.drawable.placeholder_poster)
+            val bitmapDescriptor = createBitmapDescriptorFromView(markerView)
+            continuation.resume(
+                MarkerOptions()
+                    .position(position)
+                    .icon(bitmapDescriptor)
+                    .anchor(0.5f, 1.0f)
+            )
+        }
+    }
+
+    private fun createBitmapDescriptorFromView(view: View): BitmapDescriptor {
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val width = view.measuredWidth
+        val height = view.measuredHeight
+        view.layout(0, 0, width, height)
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
     override fun onMarkerClick(marker: Marker): Boolean {
         val movieInfo = marker.tag as? MovieMarkerInfo
         if (movieInfo != null) {
@@ -412,6 +526,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             dialog.show(supportFragmentManager, "MovieDetailsDialog")
         }
         return true
+    }
+
+    //Maps
+    @SuppressLint("PotentialBehaviorOverride")
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(11.1779, -35.212), 1f))
+
+        try {
+            googleMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style)
+            )
+        } catch (e: Resources.NotFoundException) {
+            Log.e(TAG, "Não foi possível encontrar o estilo. Erro: ", e)
+        }
+
+        googleMap.setOnMarkerClickListener(this)
+        googleMap.setOnCameraIdleListener(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -451,71 +584,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         currentDiscoverResponse = null
         lastSearchedBounds = null
         currentSearchCenter = null
+        soundPool.release()
     }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
-    }
-
-    private suspend fun createCustomMarkerOptions(
-        context: Context,
-        imageUrl: String?,
-        position: LatLng
-    ): MarkerOptions = suspendCancellableCoroutine { continuation ->
-        val markerView = LayoutInflater.from(context).inflate(R.layout.custom_marker_brown, null)
-        val markerImage = markerView.findViewById<ImageView>(R.id.marker_image)
-
-        if (!imageUrl.isNullOrEmpty()) {
-            Glide.with(context)
-                .asBitmap()
-                .load(imageUrl)
-                .override(POSTER_TARGET_WIDTH, POSTER_TARGET_HEIGHT)
-                .centerCrop()
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        markerImage.setImageBitmap(resource)
-                        val bitmapDescriptor = createBitmapDescriptorFromView(context, markerView)
-                        continuation.resume(
-                            MarkerOptions()
-                                .position(position)
-                                .icon(bitmapDescriptor)
-                                .anchor(0.5f, 1.0f)
-                        )
-                    }
-
-                    override fun onLoadCleared(placeholder: android.graphics.drawable.Drawable?) {
-                        markerImage.setImageResource(R.drawable.placeholder_poster)
-                        val bitmapDescriptor = createBitmapDescriptorFromView(context, markerView)
-                        continuation.resume(
-                            MarkerOptions()
-                                .position(position)
-                                .icon(bitmapDescriptor)
-                                .anchor(0.5f, 1.0f)
-                        )
-                    }
-                })
-        } else {
-            markerImage.setImageResource(R.drawable.placeholder_poster)
-            val bitmapDescriptor = createBitmapDescriptorFromView(context, markerView)
-            continuation.resume(
-                MarkerOptions()
-                    .position(position)
-                    .icon(bitmapDescriptor)
-                    .anchor(0.5f, 1.0f)
-            )
-        }
-    }
-
-    private fun createBitmapDescriptorFromView(context: Context, view: View): BitmapDescriptor {
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val width = view.measuredWidth
-        val height = view.measuredHeight
-        view.layout(0, 0, width, height)
-
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
 }

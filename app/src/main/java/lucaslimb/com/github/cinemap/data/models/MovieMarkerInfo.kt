@@ -12,5 +12,6 @@ data class MovieMarkerInfo(
     val mainGenre: String?,
     val posterUrl: String?,
     val country: String?,
-    val releaseYear: Int?
+    val releaseYear: Int?,
+    val tagline: String?
 ) : Parcelable

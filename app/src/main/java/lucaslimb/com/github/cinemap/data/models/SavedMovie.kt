@@ -24,5 +24,6 @@ data class SavedMovie(
     val posterUrl: String?,
     val director: String,
     val country: String?,
-    val releaseYear: Int?
+    val releaseYear: Int?,
+    val tagline: String?
 )
