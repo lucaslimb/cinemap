@@ -15,15 +15,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import lucaslimb.com.github.cinemap.R
 import lucaslimb.com.github.cinemap.data.dao.ProfileDAO
 import lucaslimb.com.github.cinemap.data.models.SavedMovie
 
 class SavedMovieAdapter(private val dao: ProfileDAO,
-                        private val lifecycleScope: LifecycleCoroutineScope) : ListAdapter<SavedMovie, SavedMovieAdapter.SavedMovieViewHolder>(SavedMovieDiffCallback()) {
+                        private val lifecycleScope: LifecycleCoroutineScope) :
+                        ListAdapter<SavedMovie, SavedMovieAdapter.SavedMovieViewHolder>(SavedMovieDiffCallback()) {
 
     var onMovieDeletedCallback: (() -> Unit)? = null
 
@@ -35,10 +34,8 @@ class SavedMovieAdapter(private val dao: ProfileDAO,
         val posterImageView: ImageView = itemView.findViewById(R.id.item_info_image)
         val btnRemove: ImageButton = itemView.findViewById(R.id.btn_remove)
         val frameRemove: FrameLayout = itemView.findViewById(R.id.btn_remove_frame)
-        val frameMovie: FrameLayout = itemView.findViewById(R.id.saved_movie_poster_frame)
 
-        val cornerRadiusDp = 8f
-        val cornerRadiusPx = (itemView.context.resources.displayMetrics.density * cornerRadiusDp).toInt()
+        val cornerRadiusPx = (itemView.context.resources.displayMetrics.density * 8f).toInt()
         fun bind(movie: SavedMovie) {
             if (!movie.posterUrl.isNullOrEmpty()) {
                 Glide.with(itemView.context)

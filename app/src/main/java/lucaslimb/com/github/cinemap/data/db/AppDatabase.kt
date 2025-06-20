@@ -50,7 +50,7 @@ abstract class AppDatabase : RoomDatabase() {
                         if (existingProfile == null) {
                             val defaultProfile = Profile(
                                 id = 1,
-                                title = "A hobbit on an unexpected journey",
+                                title = "Awaiting your next journey",
                                 filmsCount = 0,
                                 countriesCount = 0,
                                 continentsCount = 0,

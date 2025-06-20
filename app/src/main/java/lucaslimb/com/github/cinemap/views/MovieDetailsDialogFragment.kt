@@ -70,13 +70,10 @@ class MovieDetailsDialogFragment : DialogFragment() {
 
             tvTitle.text = movieInfo.originalTitle
             tvGenre.text = movieInfo.mainGenre ?: resources.getString(R.string.na)
-            tvDuration.text =
-                "${movieInfo.duration?.toString() ?: resources.getString(R.string.na)} min"
+            tvDuration.text = "${movieInfo.duration?.toString() ?: resources.getString(R.string.na)} min"
             tvDirector.text = movieInfo.director
 
-
-            val cornerRadiusDp = 21f
-            val cornerRadiusPx = (view.context.resources.displayMetrics.density * cornerRadiusDp).toInt()
+            val cornerRadiusPx = (view.context.resources.displayMetrics.density * 21f).toInt()
 
             if (!movieInfo.posterUrl.isNullOrEmpty()) {
                 Glide.with(this)
@@ -135,11 +132,7 @@ class MovieDetailsDialogFragment : DialogFragment() {
     }
 
     private suspend fun save(movieInfo: MovieMarkerInfo){
-        val profile = dao.getProfile() // Use o método correto para obter o perfil
-        if (profile == null) {
-            println("Erro: Perfil padrão não encontrado. Impossível salvar o filme.")
-            return
-        }
+        val profile = dao.getProfile() ?: return
 
         val newSavedMovie = SavedMovie(
             profileId = profile.id,
@@ -153,9 +146,7 @@ class MovieDetailsDialogFragment : DialogFragment() {
         )
         try {
             dao.saveMovie(newSavedMovie)
-            println("Filme salvo com sucesso!")
         } catch (e: Exception) {
-            println("Erro ao salvar filme: ${e.message}")
             e.printStackTrace()
         }
     }

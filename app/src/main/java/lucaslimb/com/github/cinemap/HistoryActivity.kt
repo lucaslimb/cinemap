@@ -25,11 +25,9 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var title: TextView
     private lateinit var filmsCount: TextView
     private lateinit var countriesCount: TextView
-    private lateinit var continentsCount: TextView
     private lateinit var yearsCount: TextView
     private lateinit var tvOneliner: TextView
     private val pagerSnapHelper = PagerSnapHelper()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +71,6 @@ class HistoryActivity : AppCompatActivity() {
             val displayMetrics = resources.displayMetrics
             val itemWidthDp = 150f
             val calculatedItemWidthPx = (itemWidthDp * displayMetrics.density).toInt()
-
             val horizontalPadding = (recyclerViewWidthPx / 2) - (calculatedItemWidthPx / 2)
             recyclerViewSavedFilms.setPadding(horizontalPadding, 0, horizontalPadding, 0)
             recyclerViewSavedFilms.clipToPadding = false
@@ -151,22 +148,17 @@ class HistoryActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val numberFilms = dao.getFilmsCount()
 
-            if(dao.getTitle() != "null"){
-                if(numberFilms == 0) {
-                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_0))
-                } else if (numberFilms <= 10) {
-                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_10))
-                } else if (numberFilms <= 20){
-                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_20))
-                } else if (numberFilms <= 40){
-                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_40))
-                } else if (numberFilms <= 70){
-                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_70))
-                } else if (numberFilms <= 99){
-                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_99))
-                } else {
-                    title.text = getString(R.string.tv_history_profile_title, getString(R.string.tv_history_profile_100))
+            if (dao.getTitle() != "null") {
+                val titleLevel = when {
+                    numberFilms == 0 -> R.string.tv_history_profile_0
+                    numberFilms <= 9 -> R.string.tv_history_profile_10
+                    numberFilms <= 19 -> R.string.tv_history_profile_20
+                    numberFilms <= 39 -> R.string.tv_history_profile_40
+                    numberFilms <= 69 -> R.string.tv_history_profile_70
+                    numberFilms <= 99 -> R.string.tv_history_profile_99
+                    else -> R.string.tv_history_profile_100
                 }
+                title.text = getString(R.string.tv_history_profile_title, getString(titleLevel))
             }
 
             filmsCount.text = getString(R.string.tv_history_films_count, numberFilms)

@@ -98,7 +98,6 @@ class TimelineSliderView @JvmOverloads constructor(
         if (newYear != selectedYear) {
             selectedYear = newYear
             onYearSelected?.invoke(newYear)
-            Log.d("TimelineSliderView", "Ano selecionado (visualização): $newYear")
         }
     }
 
@@ -126,7 +125,6 @@ class TimelineSliderView @JvmOverloads constructor(
                 onYearSelected?.invoke(targetYear)
             }
             onYearSettled?.invoke(selectedYear)
-            Log.d("TimelineSliderView", "Slider assentado no ano: $selectedYear")
         }
     }
 
